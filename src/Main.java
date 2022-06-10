@@ -4,95 +4,102 @@ import java.io.PrintWriter;
 
 public class Main {
     public static void registration(String username, String password) throws IOException {
-        String whereWrite = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
+        String filePath = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
 
-        FileWriter fw = new FileWriter(whereWrite, true);
+        FileWriter fw = new FileWriter(filePath, true);
         BufferedWriter bw = new BufferedWriter(fw);
         PrintWriter pw = new PrintWriter(bw);
 
-
-        pw.println(username + "," + password);
+        pw.println(username + ", " + password);
         System.out.println("Successfully registered!");
         pw.flush();
         pw.close();
-
     }
 
-    public static String isLoginSuccessful(String loginUsername, String loginPassword) {
-        String file = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
-        BufferedReader reader = null;
+    public static boolean isLoginSuccessful(String loginUsername, String loginPassword) throws IOException {
+        String filePath = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
+        BufferedReader reader;
         String line;
         boolean check = false;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            while ((line = reader.readLine()) != null) {
-                String[] row = line.split(",");
-                for (int j = 0; j < row.length / 2; j++) {
-                    for (int i = 0; i < 2; i++) {
-                        if (loginUsername.equalsIgnoreCase(row[i]) && loginPassword.equalsIgnoreCase(row[i + 1])) {
-                            check = true;
-                            break;
-                        }
+        reader = new BufferedReader(new FileReader(filePath));
+        while ((line = reader.readLine()) != null) {
+
+            String[] row = line.split(", ");
+            for (int j = 0; j < row.length / 2; j++) {
+                for (int i = 0; i < 2; i++) {
+                    if (loginUsername.equalsIgnoreCase(row[i]) && loginPassword.equalsIgnoreCase(row[i + 1])) {
+                        check = true;
+                        break;
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
 
-        System.out.println();
-        if (check) {
+        return check;
+    }
+
+    public static String loginMessage(String loginUsername, String loginPassword) throws IOException {
+        if (isLoginSuccessful(loginUsername, loginPassword)) {
+            System.out.println();
             return ("Successfully logged in!");
         } else {
             System.out.println();
-            return ("Wrong username/password! \n Try again!");
+            return ("Wrong username/password!");
         }
     }
 
-    public static boolean isUsernameTaken(String username) {
+    public static boolean isUsernameTaken(String username) throws IOException {
         String file = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
-        BufferedReader reader = null;
+        BufferedReader reader;
         String line;
         boolean check = false;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            while ((line = reader.readLine()) != null) {
-                String[] row = line.split(", ");
-                for (int j = 0; j < row.length / 2; j++) {
-                    for (int i = 0; i < 2; i++) {
-                        if (username.equalsIgnoreCase(row[j])) {
-                            check = true;
-                            break;
-                        }
+        reader = new BufferedReader(new FileReader(file));
+        while ((line = reader.readLine()) != null) {
+
+            String[] row = line.split(", ");
+            for (int j = 0; j < row.length / 2; j++) {
+                for (int i = 0; i < 2; i++) {
+                    if (username.equalsIgnoreCase(row[j])) {
+                        check = true;
+                        break;
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
         return check;
+    }
+
+    public static String isAccountLoggedAlready(String[] tempUsernames, String[] tempPasswords, int index) {
+        boolean checkUser = false;
+        boolean checkPass = false;
+
+        if (index > 0) {
+            for (int i = 1; i < index + 1; i++) {
+                if (tempUsernames[index].equalsIgnoreCase(tempUsernames[index - i])) {
+                    checkUser = true;
+                }
+                if (tempPasswords[index].equalsIgnoreCase(tempPasswords[index - i])) {
+                    checkPass = true;
+                }
+            }
+        }
+        index++;
+
+        if (checkUser && checkPass) {
+            System.out.println();
+            return "There is already an account logged with the same credentials!";
+        } else {
+            return "";
+        }
     }
 
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         System.out.print("How many people are you: ");
         String people = sc.nextLine();
+        int index = 0;
+        String[] tempUsernames = new String[Integer.parseInt(people)];
+        String[] tempPasswords = new String[Integer.parseInt(people)];
 
         for (int i = 1; i <= Integer.parseInt(people); i++) {
             System.out.println("\nPlayer#" + i);
@@ -102,6 +109,7 @@ public class Main {
             String choice = sc.nextLine();
 
             if (choice.equals("1")) {
+
                 while (true) {
                     System.out.println("\nRegister: ");
                     System.out.print("\nEnter a username: ");
@@ -112,26 +120,33 @@ public class Main {
                         System.out.println("The username is already taken!");
                     } else {
                         registration(username, password);
-                        break;
-                    }
-                }
 
-                while (true) {
-                    System.out.println("\nLogin: ");
-                    System.out.print("\nEnter a username: ");
-                    String loginUsername = sc.nextLine();
-                    System.out.print("Enter a password: ");
-                    String loginPassword = sc.nextLine();
-                    System.out.println(isLoginSuccessful(loginUsername, loginPassword));
-                    if (isLoginSuccessful(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!")) {
-                        if (i == Integer.parseInt(people)) {
-                            System.out.println("Game starts!");
-                            break;
-                        } else {
-                            break;
+                        while (true) {
+                            System.out.println("\nLogin: ");
+                            System.out.print("\nEnter a username: ");
+                            String loginUsername = sc.nextLine();
+                            System.out.print("Enter a password: ");
+                            String loginPassword = sc.nextLine();
+                            if (!username.equalsIgnoreCase(loginUsername) && password.equalsIgnoreCase(loginPassword)) {
+                                System.out.println();
+                                System.out.println("The entered credentials don't match with the registered ones!");
+                            } else {
+                                System.out.println(loginMessage(loginUsername, loginPassword));
+                            }
+                            if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!") && username.equalsIgnoreCase(loginUsername) && password.equalsIgnoreCase(loginPassword)) {
+                                if (i == Integer.parseInt(people)) {
+                                    System.out.println("Game starts!");
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            }
                         }
                     }
+                    break;
                 }
+
+
             } else if (choice.equals("2")) {
                 while (true) {
                     System.out.println("\nLogin: ");
@@ -139,8 +154,22 @@ public class Main {
                     String loginUsername = sc.nextLine();
                     System.out.print("Enter a password: ");
                     String loginPassword = sc.nextLine();
-                    System.out.println(isLoginSuccessful(loginUsername, loginPassword));
-                    if (isLoginSuccessful(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!")) {
+
+                    tempUsernames[index] = loginUsername;
+                    tempPasswords[index] = loginPassword;
+                    System.out.println();
+                    if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!")) {
+                        if (isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("There is already an account logged with the same credentials!")) {
+                            System.out.println(isAccountLoggedAlready(tempUsernames, tempPasswords, index));
+                        } else {
+                            System.out.println(loginMessage(loginUsername, loginPassword));
+                        }
+                    } else {
+                        System.out.println(loginMessage(loginUsername, loginPassword));
+                    }
+                    System.out.println();
+                    if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!") && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
+                        index++;
                         if (i == Integer.parseInt(people)) {
                             System.out.println("Game starts!");
                             break;
@@ -150,8 +179,9 @@ public class Main {
                     }
                 }
             } else {
-                System.out.println("Not a choice.");
+                System.out.println("Not a choice!");
             }
         }
+
     }
 }
