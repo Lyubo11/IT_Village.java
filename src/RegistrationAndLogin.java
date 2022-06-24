@@ -1,9 +1,21 @@
 import java.io.*;
-import java.util.Scanner;
-import java.io.PrintWriter;
+import java.util.*;
 
 public class RegistrationAndLogin {
-    public static void registration(String username, String password) throws IOException {
+
+    public static final String green = "\u001B[32m";
+
+    public static final String white = "\u001B[37m";
+
+    public static final String yellow = "\u001B[33m";
+
+    public static final String red = "\u001B[31m";
+
+    public static final String redBackground = "\u001B[41m";
+
+    public static final String resetColor = "\u001B[0m";
+
+    public static void isRegistrationSuccessful(String username, String password) throws IOException {
         String filePath = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
 
         FileWriter fw = new FileWriter(filePath, true);
@@ -12,7 +24,7 @@ public class RegistrationAndLogin {
 
         pw.println(username + ", " + password);
         System.out.println();
-        System.out.println("Successfully registered!");
+        System.out.println(green + "Successfully registered!" + resetColor);
         System.out.println();
         pw.flush();
         pw.close();
@@ -27,6 +39,7 @@ public class RegistrationAndLogin {
 
         while ((line = reader.readLine()) != null) {
             String[] row = line.split(", ");
+
             if (loginUsername.equalsIgnoreCase(row[0]) && loginPassword.equalsIgnoreCase(row[1])) {
                 check = true;
                 break;
@@ -37,9 +50,9 @@ public class RegistrationAndLogin {
 
     public static String loginMessage(String loginUsername, String loginPassword) throws IOException {
         if (isLoginSuccessful(loginUsername, loginPassword)) {
-            return ("Successfully logged in!");
+            return (green + "Successfully logged in!" + resetColor);
         } else {
-            return ("Wrong username/password");
+            return (red + "Wrong username/password!" + resetColor);
         }
     }
 
@@ -49,19 +62,19 @@ public class RegistrationAndLogin {
         String line;
         boolean check = false;
         reader = new BufferedReader(new FileReader(file));
-        while ((line = reader.readLine()) != null) {
 
-            String[] row = line.split(",");
-            for (int j = 0; j < row.length / 2; j++) {
-                for (int i = 0; i < 2; i++) {
-                    if (username.equalsIgnoreCase(row[j])) {
+        while ((line = reader.readLine()) != null) {
+            String[] row = line.split(", ");
+
+            for (int i = 0; i < row.length / 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (username.equalsIgnoreCase(row[i])) {
                         check = true;
                         break;
                     }
                 }
             }
         }
-
         return check;
     }
 
@@ -82,15 +95,15 @@ public class RegistrationAndLogin {
         index++;
 
         if (checkUser && checkPass) {
-            return "There is already an account logged with the same credentials.";
+            return red + "There is already an account logged with the same credentials!" + resetColor;
         } else {
             return "";
         }
     }
 
-    public static void loginMethod(String loginUsername, String loginPassword, String[] tempUsernames, String[] tempPasswords, int index) throws IOException {
-        if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!")) {
-            if (isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("There is already an account logged with the same credentials.")) {
+    public static void AlreadyLoggedMessage(String loginUsername, String loginPassword, String[] tempUsernames, String[] tempPasswords, int index) throws IOException {
+        if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase(green + "Successfully logged in!" + resetColor)) {
+            if (isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase(red + "There is already an account logged with the same credentials!" + resetColor)) {
                 System.out.println();
                 System.out.println(isAccountLoggedAlready(tempUsernames, tempPasswords, index));
                 System.out.println();
@@ -106,47 +119,55 @@ public class RegistrationAndLogin {
         }
     }
 
-    public static void registrationMethod(String username, String password, String loginUsername, String loginPassword) throws IOException {
-        if (!username.equalsIgnoreCase(loginUsername) && password.equalsIgnoreCase(loginPassword)) {
+    public static boolean registrationAndLoginNotMatching(String username, String password, String loginUsername, String loginPassword) {
+        if (!(username.equalsIgnoreCase(loginUsername) && password.equalsIgnoreCase(loginPassword))) {
             System.out.println();
-            System.out.println("The entered credentials don't match with the registered ones.");        //TODO get username and password and compare them with the logins
+            System.out.println(red + "The entered credentials don't match with the registered ones!" + resetColor);
             System.out.println();
+            return true;
         } else {
             System.out.println();
-            System.out.println(loginMessage(loginUsername, loginPassword));
+            System.out.println(green + "Successfully logged in!" + resetColor);
             System.out.println();
+            return false;
         }
     }
 
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         System.out.print("How many people are you: ");
-        String people = sc.nextLine();
-        int index = 0;
-        String[] tempUsernames = new String[Integer.parseInt(people)];
-        String[] tempPasswords = new String[Integer.parseInt(people)];
+        String players = sc.nextLine();
+        File csvFile = new File("D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\Players_count.csv");
+        PrintWriter pw = new PrintWriter(csvFile);
+        pw.print(players);
+        pw.close();
 
-        for (int i = 1; i <= Integer.parseInt(people); i++) {
-            System.out.println("\nPlayer#" + i);
+        int index = 0;
+        String[] tempUsernames = new String[Integer.parseInt(players)];
+        String[] tempPasswords = new String[Integer.parseInt(players)];
+
+        for (int i = 1; i <= Integer.parseInt(players); i++) {
+            System.out.println(yellow + "\nPlayer#" + i + resetColor);
             System.out.println("\n1. Register");
             System.out.println("2. Login");
             System.out.print("\nPick a choice: ");
             String choice = sc.nextLine();
+            String username, password;
 
             if (choice.equals("1")) {
-
                 while (true) {
                     System.out.println("\nRegister: ");
                     System.out.print("\nEnter a username: ");
-                    String username = sc.nextLine();
+                    username = sc.nextLine();
                     System.out.print("Enter a password: ");
-                    String password = sc.nextLine();
+                    password = sc.nextLine();
+
                     if ((isUsernameTaken(username))) {
                         System.out.println();
-                        System.out.println("The username is already taken!");
+                        System.out.println(red + "The username is already taken!" + resetColor);
                         System.out.println();
                     } else {
-                        registration(username, password);
+                        isRegistrationSuccessful(username, password);
                         break;
                     }
                 }
@@ -160,18 +181,17 @@ public class RegistrationAndLogin {
                     tempUsernames[index] = loginUsername;
                     tempPasswords[index] = loginPassword;
 
-                    loginMethod(loginUsername, loginPassword, tempUsernames, tempPasswords, index);
-
-                    if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!") && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
+                    if (!registrationAndLoginNotMatching(username, password, loginUsername, loginPassword) && loginMessage(loginUsername, loginPassword).equalsIgnoreCase(green + "Successfully logged in!" + resetColor) && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
                         index++;
-                        if (i == Integer.parseInt(people)) {
-                            System.out.println("!!!Game starts!!!");
+
+                        if (i == Integer.parseInt(players)) {
+                            System.out.println(redBackground + white + "___________________" + resetColor);
+                            System.out.println(redBackground + white + "_" + resetColor + "!!!Game starts!!!" + redBackground + white + "_" + resetColor);
+                            System.out.println(redBackground + white + "___________________" + resetColor);
                         }
                         break;
                     }
                 }
-
-
             } else if (choice.equals("2")) {
                 while (true) {
                     System.out.println("\nLogin: ");
@@ -183,22 +203,28 @@ public class RegistrationAndLogin {
                     tempUsernames[index] = loginUsername;
                     tempPasswords[index] = loginPassword;
 
-                    loginMethod(loginUsername, loginPassword, tempUsernames, tempPasswords, index);
+                    AlreadyLoggedMessage(loginUsername, loginPassword, tempUsernames, tempPasswords, index);
 
-                    if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase("Successfully logged in!") && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
+                    if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase(green + "Successfully logged in!" + resetColor) && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
                         index++;
-                        if (i == Integer.parseInt(people)) {
-                            System.out.println("!!!Game starts!!!");
+
+                        if (i == Integer.parseInt(players)) {
+                            System.out.println(redBackground + white + "___________________" + resetColor);
+                            System.out.println(redBackground + white + "_" + resetColor + "!!!Game starts!!!" + redBackground + white + "_" + resetColor);
+                            System.out.println(redBackground + white + "___________________" + resetColor);
                         }
                         break;
                     }
                 }
             } else {
-                System.out.println("Not a choice!");
+                System.out.println();
+                System.out.println(red + "Not a choice!" + resetColor);
+
                 while (true) {
-                    System.out.print("\nPick a choice: ");
+                    System.out.print("\nEnter \"continue\" to pick a choice again: ");
                     choice = sc.nextLine();
-                    if (choice.equals("1") || choice.equals("2")) {
+
+                    if (choice.equalsIgnoreCase("continue")) {
                         i--;
                         break;
                     }
