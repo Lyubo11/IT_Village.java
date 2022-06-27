@@ -3,11 +3,17 @@ import java.util.*;
 
 public class Board {
 
-    public static final String green = "\u001B[32m";  //TODO Color-ni si game-a
+    public static final String green = "\u001B[32m";
 
     public static final String red = "\u001B[31m";
 
     public static final String yellow = "\u001B[33m";
+
+    public static final String purple = "\u001B[35m";
+
+    public static final String black = "\u001B[30m";
+
+    public static final String greenBackground = "\u001B[42m";
 
     public static final String resetColor = "\u001B[0m";
 
@@ -36,16 +42,16 @@ public class Board {
 
     public static void descOfPlacesOnBoard(char[] myCoord, int moves, int idInGame, int[] randPosition, int[] currentPosition) {
         switch (letterFromBoard(myCoord, moves, idInGame, randPosition, currentPosition)) {
-            case 'P' -> System.out.println("You have to buy a Cloud Cocktail! (-5)");
+            case 'P' -> System.out.println(red + "You have to buy a Cloud Cocktail! (-5)" + resetColor);
             case 'I' -> {
-                System.out.println("If you have enough money, you have to buy it! (-100)");
-                System.out.println("If not - you have to pay your stay! (-10)");
+                System.out.println(green + "If you have enough money, you have to buy it! (-100)" + resetColor);
+                System.out.println(red + "If not - you have to pay your stay! (-10)" + resetColor);
             }
-            case 'F' -> System.out.println("You receive a payment! (+20)");
+            case 'F' -> System.out.println(green + "You receive a payment! (+20)" + resetColor);
             case 'S' ->
-                    System.out.println("The Wi-Fi in the village dies, you become depressed and skip two rows! (-2 rows)");
-            case 'V' -> System.out.println("Your money multiplies by 10! (*10)");
-            case 'N' -> System.out.println("If you step on this you win the game! (GG)");
+                    System.out.println(red + "The Wi-Fi in the village dies, you become depressed and skip two rows! (-2 rows)" + resetColor);
+            case 'V' -> System.out.println(green + "Your money multiplies by 10! (*10)" + resetColor);
+            case 'N' -> System.out.println(green + "If you step on this you win the game! (GG)" + resetColor);
         }
     }
 
@@ -54,31 +60,31 @@ public class Board {
             case 'P' -> playersMoney[idInGame] = playersMoney[idInGame] - 5;
             case 'I' -> {
                 if (currentPosition[idInGame] == 2 && isItBought[0]) {
-                    if (BuyersID[0] != idInGame) {
+                    if (BuyersID[0] != idInGame) {          // If the current player's id is not equal to the buyer of the first motel give money to the owner and get money from the current player
                         System.out.println("You stepped on Player#" + (BuyersID[0] + 1) + "'s motel");
-                        System.out.println("You need to pay 20 money to Player#" + (BuyersID[0] + 1) + "! (-20)");
-                        if (missingMoves[BuyersID[0]] == 0){
-                            playersMoney[BuyersID[0]] = playersMoney[BuyersID[0]] + 20;     //if the owner of the motel is not missing moves give his money else not
+                        System.out.println(red + "You need to pay 20 money to Player#" + (BuyersID[0] + 1) + "! (-20)" + resetColor);
+                        if (missingMoves[BuyersID[0]] == 0) {
+                            playersMoney[BuyersID[0]] = playersMoney[BuyersID[0]] + 20;     // If the owner of the motel is not missing moves give his money else not
                         }
                         playersMoney[idInGame] = playersMoney[idInGame] - 20;
                     }
                 }
                 if (currentPosition[idInGame] == 7 && isItBought[1]) {
-                    if (BuyersID[1] != idInGame) {
+                    if (BuyersID[1] != idInGame) {          // If the current player's id is not equal to the buyer of the second motel give money to the owner and get money from the current player
                         System.out.println("You stepped on Player#" + (BuyersID[1] + 1) + "'s motel");
-                        System.out.println("You need to pay 20 money to Player#" + (BuyersID[1] + 1) + "! (-20)");
-                        if (missingMoves[BuyersID[1]] == 0){
-                            playersMoney[BuyersID[1]] = playersMoney[BuyersID[1]] + 20;     //if the owner of the motel is not missing moves give his money else not
+                        System.out.println(red + "You need to pay 20 money to Player#" + (BuyersID[1] + 1) + "! (-20)" + resetColor);
+                        if (missingMoves[BuyersID[1]] == 0) {
+                            playersMoney[BuyersID[1]] = playersMoney[BuyersID[1]] + 20;     // If the owner of the motel is not missing moves give his money else not
                         }
                         playersMoney[idInGame] = playersMoney[idInGame] - 20;
                     }
                 }
                 if (currentPosition[idInGame] == 10 && isItBought[2]) {
-                    if (BuyersID[2] != idInGame) {
+                    if (BuyersID[2] != idInGame) {          // If the current player's id is not equal to the buyer of the third motel give money to the owner and get money from the current player
                         System.out.println("You stepped on Player#" + (BuyersID[2] + 1) + "'s motel");
-                        System.out.println("You need to pay 20 money to Player#" + (BuyersID[2] + 1) + "! (-20)");
-                        if (missingMoves[BuyersID[2]] == 0){
-                            playersMoney[BuyersID[2]] = playersMoney[BuyersID[2]] + 20;     //if the owner of the motel is not missing moves give his money else not
+                        System.out.println(red + "You need to pay 20 money to Player#" + (BuyersID[2] + 1) + "! (-20)" + resetColor);
+                        if (missingMoves[BuyersID[2]] == 0) {
+                            playersMoney[BuyersID[2]] = playersMoney[BuyersID[2]] + 20;     // If the owner of the motel is not missing moves give his money else not
                         }
                         playersMoney[idInGame] = playersMoney[idInGame] - 20;
                     }
@@ -86,17 +92,17 @@ public class Board {
                 if ((playersMoney[idInGame] >= 100 && currentPosition[idInGame] == 2) && !isItBought[0]) {
                     playersMoney[idInGame] = playersMoney[idInGame] - 100;
                     isItBought[0] = true;
-                    System.out.println("You bought the first motel!");
+                    System.out.println(green + "You bought the first motel!" + resetColor);
                     BuyersID[0] = idInGame;
                 } else if ((playersMoney[idInGame] >= 100 && currentPosition[idInGame] == 7) && !isItBought[1]) {
                     playersMoney[idInGame] = playersMoney[idInGame] - 100;
                     isItBought[1] = true;
-                    System.out.println("You bought the second motel!");
+                    System.out.println(green + "You bought the second motel!" + resetColor);
                     BuyersID[1] = idInGame;
                 } else if ((playersMoney[idInGame] >= 100 && currentPosition[idInGame] == 10) && !isItBought[2]) {
                     playersMoney[idInGame] = playersMoney[idInGame] - 100;
                     isItBought[2] = true;
-                    System.out.println("You bought the third motel!");
+                    System.out.println(green + "You bought the third motel!" + resetColor);
                     BuyersID[2] = idInGame;
                 } else if ((playersMoney[idInGame] < 100 && currentPosition[idInGame] == 2 && !isItBought[0]) || (playersMoney[idInGame] < 100 && currentPosition[idInGame] == 7 && !isItBought[1]) || (playersMoney[idInGame] < 100 && currentPosition[idInGame] == 10 && !isItBought[2])) {
                     playersMoney[idInGame] = playersMoney[idInGame] - 10;
@@ -149,22 +155,21 @@ public class Board {
             if (moves == 25) {
                 for (int i = 1; i <= players; ++i) {
                     System.out.println();
-                    System.out.println("Player#" + i + " ran out of moves. Player#" + i + " has got " + playersMoney[i - 1] + " money!");
+                    System.out.println(green + "Player#" + i + " ran out of moves. Player#" + i + " has got " + playersMoney[i - 1] + " money!" + resetColor);
                 }
                 System.exit(0);
             } else {
                 String rollAgain = sc.nextLine();
-                String wait = "Rolling the dice";
+                String wait = yellow + "Rolling the dice" + resetColor;
                 System.out.print(wait);
 
             }
             new Timer().scheduleAtFixedRate(new TimerTask() {           // A timer that runs a function every second until the dots become three (simulating dice rolling)
                 int times = 0;
 
-                @Override
                 public void run() {
-                    times++;
-                    System.out.print(".");
+                    ++times;
+                    System.out.print(yellow + "." + resetColor);
                     if (times == 3) {
                         System.out.println();
                         cancel();
@@ -178,29 +183,30 @@ public class Board {
                 public void run() {
                     int idInGame = 0;
                     for (int i = 1; i <= players; ++i) {
-                        if (playersMoney[i - 1] <= 0) {             //TODO sled kato mqkoi run outne ot pari,drugite da produljavat da poluchavat pari
+                        if (playersMoney[i - 1] <= 0) {
                             System.out.println();
-                            System.out.println("Player#" + i + " ran out of money!");
+                            System.out.println(red + "Player#" + i + " ran out of money!" + resetColor);
+                            ++idInGame;
                             continue;
                         }
                         if ((isItBought[0] && (buyersID[0] == i - 1)) && (isItBought[1] && (buyersID[1] == i - 1)) && (isItBought[2] && (buyersID[2] == i - 1))) {
-                            System.out.println("Player#" + i + " bought all motels. He has " + playersMoney[i - 1] + " money!");
-                            System.out.println("You have won the game!!!");
+                            System.out.println();
+                            System.out.println(green + "Player#" + i + " bought all motels. He has " + playersMoney[i - 1] + " money!" + resetColor);
+                            System.out.println(greenBackground + black + "You have won the game!!!" + resetColor);
                             System.exit(0);
-
                         }
 
                         randPosition[i - 1] = rand.nextInt(myCoord.length) + 1;
                         System.out.println();
-                        System.out.println("Player #" + i + ":");
+                        System.out.println(purple + "Player #" + i + ":" + resetColor);
                         int randNumForDice = rand.nextInt(6) + 1;
 
                         if (missingMoves[i - 1] == 0) {
                             if (tempMoves != 0) {
                                 int count = 1;
-                                for (int j = 1; j <= randNumForDice; ++j) {
+                                for (int j = 1; j <= randNumForDice; ++j) {                 // Sums the currentPosition with randNumForDice one by one
                                     currentPosition[idInGame] = currentPosition[idInGame] + count;
-                                    if (currentPosition[idInGame] > 12) {
+                                    if (currentPosition[idInGame] > myCoord.length) {
                                         currentPosition[idInGame] = 1;
                                     }
                                 }
@@ -213,26 +219,22 @@ public class Board {
                         }
                         exLetters[i - 1] = letterFromBoard(myCoord, tempMoves, idInGame, randPosition, currentPosition);
 
-                        if ((exLetters[i - 1] == 'S') && (missingMoves[i - 1] <= 3)) {
+                        if ((exLetters[i - 1] == 'S') && (missingMoves[i - 1] <= 3)) {              // If a player received S from a previous move, and he is missing less than 2 moves
                             if (tempMoves != 0 && missingMoves[i - 1] != 0) {
                                 System.out.println("Position: " + positionOnBoard(tempMoves, idInGame, randPosition, currentPosition));
                             }
                             if (missingMoves[i - 1] > 0) {
                                 System.out.println();
-                                System.out.println("Player#" + i + " is missing a move!");
+                                System.out.println(red + "Player#" + i + " is missing a move!" + resetColor);
                                 System.out.println();
                                 ++missingMoves[i - 1];
                                 if (missingMoves[i - 1] == 3) {
-                                    missingMoves[i - 1] = 0;
+                                    missingMoves[i - 1] = 0;            // When he misses the second move it resets his missed moves
                                 }
                                 ++idInGame;
                                 continue;
                             }
                             ++missingMoves[i - 1];
-
-                            if (missingMoves[i - 1] == 2) {
-                                missingMoves[i - 1] = 0;
-                            }
                         }
 
                         System.out.println("Letter from the board: " + letterFromBoard(myCoord, tempMoves, idInGame, randPosition, currentPosition));
@@ -244,10 +246,17 @@ public class Board {
 
                         if ((letterFromBoard(myCoord, tempMoves, idInGame, randPosition, currentPosition) == 'N') && tempMoves != 0) {
                             System.out.println();
-                            System.out.println("Player#" + i + " has won the game from " + (tempMoves + 1) + " moves!");
+                            System.out.println(greenBackground + black + "Player#" + i + " has won the game from " + (tempMoves + 1) + " moves!" + resetColor);
                             System.exit(0);
                         } else if ((letterFromBoard(myCoord, tempMoves, idInGame, randPosition, currentPosition) == 'N') && tempMoves == 0) {
-                            System.out.println("Sorry, you can't win from the first time!");
+                            System.out.println(red + "Sorry, you can't win from the first time!" + resetColor);
+                        }
+                        if (players == 1) {
+                            if (playersMoney[i - 1] <= 0) {
+                                System.out.println(red + "Player#" + i + " ran out of money!" + resetColor);
+                                ++idInGame;
+                                System.exit(0);
+                            }
                         }
                         ++idInGame;
                     }

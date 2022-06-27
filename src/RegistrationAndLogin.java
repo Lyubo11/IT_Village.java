@@ -18,9 +18,9 @@ public class RegistrationAndLogin {
     public static void isRegistrationSuccessful(String username, String password) throws IOException {
         String filePath = "D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\data.csv";
 
-        FileWriter fw = new FileWriter(filePath, true);
-        BufferedWriter bw = new BufferedWriter(fw);
-        PrintWriter pw = new PrintWriter(bw);
+        FileWriter fw = new FileWriter(filePath, true);  // Writes entered values to the csv file
+        BufferedWriter bw = new BufferedWriter(fw);             // An efficient way to write to a file
+        PrintWriter pw = new PrintWriter(bw);                   // Get access to all print methods like println() and etc.
 
         pw.println(username + ", " + password);
         System.out.println();
@@ -37,7 +37,7 @@ public class RegistrationAndLogin {
         boolean check = false;
         reader = new BufferedReader(new FileReader(filePath));
 
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {            // Loops through the csv file and if username and password match
             String[] row = line.split(", ");
 
             if (loginUsername.equalsIgnoreCase(row[0]) && loginPassword.equalsIgnoreCase(row[1])) {
@@ -66,8 +66,8 @@ public class RegistrationAndLogin {
         while ((line = reader.readLine()) != null) {
             String[] row = line.split(", ");
 
-            for (int i = 0; i < row.length / 2; i++) {
-                for (int j = 0; j < 2; j++) {
+            for (int i = 0; i < row.length / 2; ++i) {          // Loops through(column) every username in the csv file and checks if the entered value is in any of the usernames in there
+                for (int j = 0; j < 2; ++j) {
                     if (username.equalsIgnoreCase(row[i])) {
                         check = true;
                         break;
@@ -83,7 +83,7 @@ public class RegistrationAndLogin {
         boolean checkPass = false;
 
         if (index > 0) {
-            for (int i = 1; i < index + 1; i++) {
+            for (int i = 1; i < index + 1; ++i) {           //loops through and compares all the already logged usernames and passwords with the currently entered ones
                 if (tempUsernames[index].equalsIgnoreCase(tempUsernames[index - i])) {
                     checkUser = true;
                 }
@@ -92,7 +92,7 @@ public class RegistrationAndLogin {
                 }
             }
         }
-        index++;
+        ++index;
 
         if (checkUser && checkPass) {
             return red + "There is already an account logged with the same credentials!" + resetColor;
@@ -139,14 +139,14 @@ public class RegistrationAndLogin {
         String players = sc.nextLine();
         File csvFile = new File("D:\\.Digital Razgrad\\Java - Модул I\\Final Project\\IT_Village\\Players_count.csv");
         PrintWriter pw = new PrintWriter(csvFile);
-        pw.print(players);
+        pw.print(players);           // Prints the amount of people you entered in csv file
         pw.close();
 
         int index = 0;
         String[] tempUsernames = new String[Integer.parseInt(players)];
         String[] tempPasswords = new String[Integer.parseInt(players)];
 
-        for (int i = 1; i <= Integer.parseInt(players); i++) {
+        for (int i = 1; i <= Integer.parseInt(players); ++i) {
             System.out.println(yellow + "\nPlayer#" + i + resetColor);
             System.out.println("\n1. Register");
             System.out.println("2. Login");
@@ -182,9 +182,9 @@ public class RegistrationAndLogin {
                     tempPasswords[index] = loginPassword;
 
                     if (!registrationAndLoginNotMatching(username, password, loginUsername, loginPassword) && loginMessage(loginUsername, loginPassword).equalsIgnoreCase(green + "Successfully logged in!" + resetColor) && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
-                        index++;
+                        ++index;
 
-                        if (i == Integer.parseInt(players)) {
+                        if (i == Integer.parseInt(players)) {           // If we are looping through the last person of the list then start the game
                             System.out.println(redBackground + white + "___________________" + resetColor);
                             System.out.println(redBackground + white + "_" + resetColor + "!!!Game starts!!!" + redBackground + white + "_" + resetColor);
                             System.out.println(redBackground + white + "___________________" + resetColor);
@@ -206,7 +206,7 @@ public class RegistrationAndLogin {
                     AlreadyLoggedMessage(loginUsername, loginPassword, tempUsernames, tempPasswords, index);
 
                     if (loginMessage(loginUsername, loginPassword).equalsIgnoreCase(green + "Successfully logged in!" + resetColor) && isAccountLoggedAlready(tempUsernames, tempPasswords, index).equalsIgnoreCase("")) {
-                        index++;
+                        ++index;
 
                         if (i == Integer.parseInt(players)) {
                             System.out.println(redBackground + white + "___________________" + resetColor);
@@ -225,7 +225,7 @@ public class RegistrationAndLogin {
                     choice = sc.nextLine();
 
                     if (choice.equalsIgnoreCase("continue")) {
-                        i--;
+                        --i;
                         break;
                     }
                 }
